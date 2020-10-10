@@ -18,13 +18,13 @@ var (
 )
 
 var Module = fx.Options(
-	fx.Provide(NewClient),
-	fx.Provide(NewDatabase),
-	fx.Provide(Check),
-	fx.Invoke(Init),
+	fx.Provide(newClient),
+	fx.Provide(newDatabase),
+	fx.Provide(check),
+	fx.Invoke(start),
 )
 
-func NewClient() (*mongo.Client, error) {
+func newClient() (*mongo.Client, error) {
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
 		return nil, ErrURIRequired
@@ -32,7 +32,7 @@ func NewClient() (*mongo.Client, error) {
 	return mongo.NewClient(options.Client().ApplyURI(uri))
 }
 
-func NewDatabase(client *mongo.Client) (*mongo.Database, error) {
+func newDatabase(client *mongo.Client) (*mongo.Database, error) {
 	name := os.Getenv("MONGODB_DATABASE")
 	if name == "" {
 		return nil, ErrDBNameRequired
@@ -45,10 +45,10 @@ type CheckOut struct {
 	Check func(ctx context.Context) error `group:"checkers"`
 }
 
-func Check(client *mongo.Client) CheckOut {
+func check(client *mongo.Client) CheckOut {
 	return CheckOut{
 		Check: func(ctx context.Context) error {
-			ctxTimeout, cancel := context.WithTimeout(ctx, 3 * time.Second)
+			ctxTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 			defer cancel()
 			if err := client.Ping(ctxTimeout, readpref.Primary()); err != nil {
 				return err
@@ -58,7 +58,7 @@ func Check(client *mongo.Client) CheckOut {
 	}
 }
 
-func Init(lifecycle fx.Lifecycle, client *mongo.Client) {
+func start(lifecycle fx.Lifecycle, client *mongo.Client) {
 	lifecycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			if err := client.Connect(ctx); err != nil {

@@ -15,8 +15,8 @@ import (
 )
 
 var Module = fx.Options(
-	fx.Provide(New),
-	fx.Invoke(Init),
+	fx.Provide(new),
+	fx.Invoke(start),
 )
 
 var (
@@ -31,7 +31,7 @@ type Params struct {
 	Check  *healthcheck.HealthCheck `optional:"true"`
 }
 
-func New(params Params) http.Server {
+func new(params Params) http.Server {
 	host := os.Getenv("HOST")
 	if host == "" {
 		host = "localhost"
@@ -53,7 +53,7 @@ func New(params Params) http.Server {
 	return srv
 }
 
-func Init(lifecycle fx.Lifecycle, srv http.Server) {
+func start(lifecycle fx.Lifecycle, srv http.Server) {
 	lifecycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
