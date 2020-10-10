@@ -45,9 +45,7 @@ func Init(lifecycle fx.Lifecycle, client *redis.Client) {
 			return err
 		},
 		OnStop: func(ctx context.Context) error {
-			cmd := client.Shutdown(ctx)
-			_, err := cmd.Result()
-			return err
+			return client.WithContext(ctx).Close()
 		},
 	})
 }
