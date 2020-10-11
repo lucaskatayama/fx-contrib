@@ -43,8 +43,10 @@ func new(params Params) http.Server {
 
 	mux := http.DefaultServeMux
 	mux.Handle("/", params.Router)
-	mux.HandleFunc(params.Check.HandleReadinessCheck())
-	mux.HandleFunc(params.Check.HandleHealthzCheck())
+	if params.Check != nil {
+		mux.HandleFunc(params.Check.HandleReadinessCheck())
+		mux.HandleFunc(params.Check.HandleHealthzCheck())
+	}
 	addr := fmt.Sprintf("%s:%s", host, port)
 	srv := http.Server{
 		Addr:    addr,
