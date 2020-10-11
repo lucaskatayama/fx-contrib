@@ -41,13 +41,13 @@ func newDatabase(client *mongo.Client) (*mongo.Database, error) {
 	return client.Database(name), nil
 }
 
-type CheckOut struct {
+type outCheck struct {
 	fx.Out
 	Check func(ctx context.Context) error `group:"checkers"`
 }
 
-func check(client *mongo.Client) CheckOut {
-	return CheckOut{
+func check(client *mongo.Client) outCheck {
+	return outCheck{
 		Check: func(ctx context.Context) error {
 			ctxTimeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 			defer cancel()

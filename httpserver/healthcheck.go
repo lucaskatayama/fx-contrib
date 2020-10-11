@@ -13,7 +13,7 @@ var ModuleHealthCheck = fx.Options(
 	fx.Provide(newHealthCheck),
 )
 
-type Checkers struct {
+type checkers struct {
 	fx.In
 	Checkers []func(ctx context.Context) error `group:"checkers"`
 }
@@ -22,7 +22,7 @@ type healthcheck struct {
 	Checkers []func(ctx context.Context) error
 }
 
-func newHealthCheck(checkers Checkers) *healthcheck {
+func newHealthCheck(checkers checkers) *healthcheck {
 	return &healthcheck{
 		Checkers: checkers.Checkers,
 	}
