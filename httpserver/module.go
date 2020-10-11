@@ -25,14 +25,13 @@ var Module = fx.Options(
 	fx.Invoke(start),
 )
 
-// Params declares `httpserver.Module` params with optional `healthcheck`ers
-type Params struct {
+type params struct {
 	fx.In
 	Router http.Handler
 	Check  *healthcheck.HealthCheck `optional:"true"`
 }
 
-func new(params Params) http.Server {
+func new(params params) http.Server {
 	host := os.Getenv("HOST")
 	if host == "" {
 		host = "localhost"

@@ -7,7 +7,7 @@ import (
 )
 
 // This is a simple usage of httpserver.Module with fx
-func ExampleModule_simple() {
+func Example() {
 	app := fx.New(
 		httpserver.Module,
 	)
