@@ -18,13 +18,13 @@ var (
 )
 
 var Module = fx.Options(
-	fx.Provide(newClient),
+	fx.Provide(new),
 	fx.Provide(newDatabase),
 	fx.Provide(check),
 	fx.Invoke(start),
 )
 
-func newClient() (*mongo.Client, error) {
+func new() (*mongo.Client, error) {
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
 		uri = "mongodb://localhost:27017"

@@ -2,17 +2,13 @@ package nats
 
 import (
 	"context"
-	"errors"
 	"os"
 
 	"github.com/nats-io/nats.go"
 	"go.uber.org/fx"
 )
 
-var (
-	ErrNatsURIRequired = errors.New("NATS_URI is required")
-)
-
+// Module provides a nats module for fx
 var Module = fx.Options(
 	fx.Provide(new),
 	fx.Invoke(start),

@@ -9,9 +9,14 @@ import (
 	"go.uber.org/fx"
 )
 
-var Module = fx.Options(fx.Provide(NewClient), fx.Invoke(Init), fx.Provide(Check))
+// Module provides a redis/v7 module for fx
+var Module = fx.Options(
+	fx.Provide(new),
+	fx.Provide(check),
+	fx.Invoke(start),
+)
 
-func NewClient() *redis.Client {
+func new() *redis.Client {
 	addr := os.Getenv("REDIS_URI")
 
 	return redis.NewClient(&redis.Options{
@@ -21,13 +26,13 @@ func NewClient() *redis.Client {
 	})
 }
 
-type CheckOut struct {
+type outCheck struct {
 	fx.Out
 	Check func(ctx context.Context) error `group:"checkers"`
 }
 
-func Check(client *redis.Client) CheckOut {
-	return CheckOut{
+func check(client *redis.Client) outCheck {
+	return outCheck{
 		Check: func(ctx context.Context) error {
 			cmd := client.WithTimeout(3 * time.Second).Ping()
 			if _, err := cmd.Result(); err != nil {
@@ -38,7 +43,7 @@ func Check(client *redis.Client) CheckOut {
 	}
 }
 
-func Init(lifecycle fx.Lifecycle, client *redis.Client) {
+func start(lifecycle fx.Lifecycle, client *redis.Client) {
 	lifecycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			cmd := client.Ping()

@@ -10,6 +10,7 @@ import (
 	"go.uber.org/fx"
 )
 
+// Module provides a sql module for fx.
 var Module = fx.Options(
 	fx.Provide(new),
 	fx.Invoke(start),

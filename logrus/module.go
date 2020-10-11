@@ -8,6 +8,7 @@ import (
 	"go.uber.org/fx"
 )
 
+// Module provides a logrus module for fx.
 var Module = fx.Options(
 	fx.Provide(new),
 )
