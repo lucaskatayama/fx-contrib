@@ -7,6 +7,7 @@ import (
 	"go.uber.org/fx"
 )
 
+// Module provides a newrelic module for fx.
 var Module = fx.Options(
 	fx.Provide(new),
 )

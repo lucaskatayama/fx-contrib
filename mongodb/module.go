@@ -13,8 +13,8 @@ import (
 )
 
 var (
+	// ErrDBNameRequired is returned when MONGODB_DATABASE name is not defined on environment variables
 	ErrDBNameRequired = errors.New("MONGODB_DATABASE is required")
-	ErrURIRequired    = errors.New("MONGODB_URI is required")
 )
 
 var Module = fx.Options(
