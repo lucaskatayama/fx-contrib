@@ -17,6 +17,7 @@ var (
 	ErrDBNameRequired = errors.New("MONGODB_DATABASE is required")
 )
 
+// Module defines a mongodb module for fx.
 var Module = fx.Options(
 	fx.Provide(new),
 	fx.Provide(newDatabase),

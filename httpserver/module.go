@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"go.uber.org/fx"
-
-	"github.com/lucaskatayama/fx-contrib/httpserver/healthcheck"
 )
 
 // Module provides a fx module
@@ -28,7 +26,7 @@ var Module = fx.Options(
 type params struct {
 	fx.In
 	Router http.Handler
-	Check  *healthcheck.HealthCheck `optional:"true"`
+	Check  *healthcheck `optional:"true"`
 }
 
 func new(params params) http.Server {
@@ -44,8 +42,8 @@ func new(params params) http.Server {
 	mux := http.DefaultServeMux
 	mux.Handle("/", params.Router)
 	if params.Check != nil {
-		mux.HandleFunc(params.Check.HandleReadinessCheck())
-		mux.HandleFunc(params.Check.HandleHealthzCheck())
+		mux.HandleFunc(params.Check.handleReadinessCheck())
+		mux.HandleFunc(params.Check.handleHealthzCheck())
 	}
 	addr := fmt.Sprintf("%s:%s", host, port)
 	srv := http.Server{

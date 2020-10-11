@@ -1,4 +1,4 @@
-package healthcheck
+package httpserver
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"go.uber.org/fx"
 )
 
-// Module provides a healthcheck module for fx.
-var Module = fx.Options(
-	fx.Provide(new),
+// ModuleHealthCheck provides a healthcheck module for fx.
+var ModuleHealthCheck = fx.Options(
+	fx.Provide(newHealthCheck),
 )
 
 type Checkers struct {
@@ -18,21 +18,17 @@ type Checkers struct {
 	Checkers []func(ctx context.Context) error `group:"checkers"`
 }
 
-type HealthCheck struct {
+type healthcheck struct {
 	Checkers []func(ctx context.Context) error
 }
 
-func new(checkers Checkers) *HealthCheck {
-	return &HealthCheck{
+func newHealthCheck(checkers Checkers) *healthcheck {
+	return &healthcheck{
 		Checkers: checkers.Checkers,
 	}
 }
 
-func (c HealthCheck) Add(check func(ctx context.Context) error) {
-	c.Checkers = append(c.Checkers, check)
-}
-
-func (c HealthCheck) CheckAll(ctx context.Context) error {
+func (c healthcheck) checkAll(ctx context.Context) error {
 	for _, val := range c.Checkers {
 		if err := val(ctx); err != nil {
 			return err
@@ -41,14 +37,14 @@ func (c HealthCheck) CheckAll(ctx context.Context) error {
 	return nil
 }
 
-func (c HealthCheck) HandleReadinessCheck() (string, http.HandlerFunc) {
+func (c healthcheck) handleReadinessCheck() (string, http.HandlerFunc) {
 	path := os.Getenv("HEALTHCHECK_READINESS_PATH")
 	if path == "" {
 		path = "/readiness"
 	}
 	return path, func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		if err := c.CheckAll(ctx); err != nil {
+		if err := c.checkAll(ctx); err != nil {
 			w.WriteHeader(http.StatusServiceUnavailable)
 			w.Write([]byte(err.Error()))
 			return
@@ -61,7 +57,7 @@ func (c HealthCheck) HandleReadinessCheck() (string, http.HandlerFunc) {
 
 }
 
-func (c HealthCheck) HandleHealthzCheck() (string, http.HandlerFunc) {
+func (c healthcheck) handleHealthzCheck() (string, http.HandlerFunc) {
 	path := os.Getenv("HEALTHCHECK_HEALTHZ_PATH")
 	if path == "" {
 		path = "/healthz"
