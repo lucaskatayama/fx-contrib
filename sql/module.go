@@ -13,6 +13,7 @@ import (
 // Module provides a sql module for fx.
 var Module = fx.Options(
 	fx.Provide(new),
+	fx.Provide(check),
 	fx.Invoke(start),
 )
 
@@ -32,4 +33,17 @@ func start(lifecycle fx.Lifecycle, db *sql.DB) {
 			return db.Close()
 		},
 	})
+}
+
+type outCheck struct {
+	fx.Out
+	Check func(ctx context.Context) error `group:"checkers"`
+}
+
+func check(db *sql.DB) outCheck {
+	return outCheck{
+		Check: func(ctx context.Context) error {
+			return db.PingContext(ctx)
+		},
+	}
 }
