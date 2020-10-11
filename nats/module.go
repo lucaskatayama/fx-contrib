@@ -26,7 +26,7 @@ type params struct {
 func new(p params) (*nats.Conn, error) {
 	ncURI := os.Getenv("NATS_URI")
 	if ncURI == "" {
-		return nil, ErrNatsURIRequired
+		ncURI = "nats://localhost:4222"
 	}
 	return nats.Connect(ncURI, p.Opts...)
 }

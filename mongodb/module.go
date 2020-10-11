@@ -27,7 +27,7 @@ var Module = fx.Options(
 func newClient() (*mongo.Client, error) {
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
-		return nil, ErrURIRequired
+		uri = "mongodb://localhost:27017"
 	}
 	return mongo.NewClient(options.Client().ApplyURI(uri))
 }
