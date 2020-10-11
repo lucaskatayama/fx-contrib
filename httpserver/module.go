@@ -13,8 +13,10 @@ import (
 	"github.com/lucaskatayama/fx-contrib/httpserver/healthcheck"
 )
 
-// Module provides a `fx` module
-// Use on `fx` app declation
+// Module provides a fx module
+//
+//
+// Use on fx app declation
 //     app := fx.New(
 //        httpserver.Module,
 //     )
