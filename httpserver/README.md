@@ -1,5 +1,8 @@
 # HTTP Server Module
 
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/lucaskatayama/fx-contrib/httpserver)](https://pkg.go.dev/github.com/lucaskatayama/fx-contrib/httpserver)
+[![goreport](https://goreportcard.com/badge/github.com/lucaskatayama/fx-contrib/httpserver)](https://goreportcard.com/badge/github.com/lucaskatayama/fx-contrib/httpserver)
+
 ## Environment Variables
 
 ```

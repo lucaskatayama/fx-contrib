@@ -2,7 +2,6 @@ package httpserver
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,12 +23,7 @@ var Module = fx.Options(
 	fx.Invoke(start),
 )
 
-var (
-	InvalidHostErr       = errors.New("invalid host")
-	InvalidPortErr       = errors.New("invalid port")
-	InvaidReadTimeoutErr = errors.New("invalid read timeout")
-)
-
+// Params declares `httpserver.Module` params with optional `healthcheck`ers
 type Params struct {
 	fx.In
 	Router http.Handler
