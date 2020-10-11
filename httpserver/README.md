@@ -19,6 +19,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"go.uber.org/fx"
 
 	"github.com/lucaskatayama/fx-contrib/httpserver"
 )
@@ -33,16 +34,17 @@ func router() http.Handler {
 	g := e.Group("/api")
 
 	g.GET("/hello", func(c echo.Context) error {
-		return c.String("Hello World!")
+		return c.String(http.StatusOK, "Hello World!")
 	})
 	return e
 }
 
-func main(){
+func main() {
 	app := fx.New(
 		httpserver.Module,
-		fx.Provide(router), 
-    )
+		fx.Provide(router),
+	)
+	app.Run()
 }
 ```
 
