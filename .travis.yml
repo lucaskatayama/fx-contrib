@@ -3,4 +3,4 @@ language: go
 go:
   - 1.15.x
 env:
-  GO111MODULE=on
+  - GO111MODULE=on
