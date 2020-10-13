@@ -1,4 +1,4 @@
-module github.com/lucaskatayama/fx-contrib/redis/redisv8
+module github.com/lucaskatayama/fx-contrib/redis
 
 go 1.15
 
